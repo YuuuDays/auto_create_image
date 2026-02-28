@@ -2,6 +2,7 @@ package stablediffusion
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -17,17 +18,17 @@ type SDResponse struct {
 	Images []string `json:"images"`
 }
 
-func GenerateImage(prompt string, pickUpCharcterJP string) {
+func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) {
 
-	// ====== ① フォルダ作成 ======
+	// ======  フォルダ作成 ======
 	outputDir := "./output"
 	os.MkdirAll(outputDir, os.ModePerm)
 
-	// ====== ② 次の連番を取得 ======
+	// ====== 次の連番を取得 ======
 	nextNumber, err := getNextNumber(outputDir, pickUpCharcterJP)
 
 	if err != nil {
-		os.Exit(0)
+		return
 	}
 
 	// nagative_prompt ベタ打ちの為要変更検討
@@ -43,38 +44,61 @@ func GenerateImage(prompt string, pickUpCharcterJP string) {
 
 	jsonData, _ := json.Marshal(payload)
 
-	resp, err := http.Post(
+	// ====== HTTPリクエスト作成 ======
+	req, err := http.NewRequestWithContext(
+		ctx,
+		"POST",
 		"http://127.0.0.1:7861/sdapi/v1/txt2img",
-		"application/json",
 		bytes.NewBuffer(jsonData),
 	)
+	req.Header.Set("Content-Type", "application/json")
+
+	// ====== リクエスト送信 ======
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		if ctx.Err() != nil {
+			fmt.Println("リクエストキャンセルされました")
+			return
+		}
 		fmt.Println("レスポンス帰ってきませんでした....")
-		os.Exit(0)
+		return
 	}
 	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
-
-	var result SDResponse
-	json.Unmarshal(body, &result)
-
-	fmt.Println("Status:", resp.Status)
-	if len(result.Images) == 0 {
-		fmt.Println("画像が帰ってきませんでした....")
-		os.Exit(0)
+	// ====== レスポンス読み込み ======
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("レスポンス読み込み失敗...")
+		return
 	}
 
-	imageBytes, _ := base64.StdEncoding.DecodeString(result.Images[0])
+	var result SDResponse
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		fmt.Println("JSONパース失敗...")
+		return
+	}
 
-	// ====== ④ 保存 ======
+	if len(result.Images) == 0 {
+		fmt.Println("画像が帰ってきませんでした....")
+		return
+	}
+
+	// ====== Base64デコード ======
+	imageBytes, err := base64.StdEncoding.DecodeString(result.Images[0])
+	if err != nil {
+		fmt.Println("Base64デコード失敗...")
+		return
+	}
+
+	// ====== 保存 ======
 	fileName := fmt.Sprintf("%s_%03d.png", pickUpCharcterJP, nextNumber)
 	fullPath := filepath.Join(outputDir, fileName)
 
 	err = os.WriteFile(fullPath, imageBytes, 0644)
 	if err != nil {
 		fmt.Println("保存できませんでした....")
-		os.Exit(0)
+		return
 	}
 
 	fmt.Println("保存完了", fullPath)

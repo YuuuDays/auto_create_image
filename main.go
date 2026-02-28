@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/yourname/sd-auto/common"
 	"github.com/yourname/sd-auto/config"
@@ -34,6 +38,21 @@ ui/              → ユーザーインターフェース
 prompt/          → データ読み込み
 */
 func main() {
+	// ====== Ctrl+C対応 context ======
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		<-sigChan
+		fmt.Println("\n🛑 Ctrl+C 検知 生成停止します...")
+		cancel()
+
+		// SD側も強制停止（任意）
+		http.Post("http://127.0.0.1:7861/sdapi/v1/interrupt", "application/json", nil)
+	}()
 
 	// 設定ファイル読み込み
 	cfg, err := config.Load("config/order.json")
@@ -59,14 +78,20 @@ func main() {
 	// UI開始
 	responsePrompt, pickUpCharacterJP := ui.Run(allData, cfg.PromptOrder)
 
-	// 結果を表示
-	for i, prompt := range responsePrompt {
-		fmt.Println(i, prompt)
-		stablediffusion.GenerateImage(prompt, pickUpCharacterJP)
+	// 生成ループ
+	for _, prompt := range responsePrompt {
+		select {
+		case <-ctx.Done():
+			fmt.Println("生成ループ停止!!!!!!!!!!!!!!!")
+			return
+		default:
+			// fmt.Println(i, prompt)
+			stablediffusion.GenerateImage(ctx, prompt, pickUpCharacterJP)
+		}
+
+		print(err)
+
 	}
-
-	print(err)
-
 }
 
 // // 読み込み順指定
