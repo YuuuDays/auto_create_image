@@ -40,6 +40,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 		"width":           816,
 		"height":          1024,
 		"cfg_scale":       7,
+		"steps":           20,
 		"seed":            -1, // -1でランダム
 	}
 

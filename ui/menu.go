@@ -2,7 +2,6 @@ package ui
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/yourname/sd-auto/common"
 	"github.com/yourname/sd-auto/generator"
@@ -36,28 +35,31 @@ func showMainMenu(gen *generator.Generator, allData map[string][]common.PromptIt
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	fmt.Print("選択 >> ")
 
-	choice := ReadInt()
+	// choice := ReadInt()
 
 	var prompts []string      // 生成されたプロンプトを保持
 	var pickupCharcter string //選択したキャラ名(JP)
 
-	switch choice {
-	case 1:
-		CompletelyRandomMode(gen)
-	case 2:
-		prompts, pickupCharcter = CharacterFixedMode(gen)
-	// case 3:
-	// 	AdvancedFixedMode(gen, allData)
-	// case 4:
-	// 	ShowAllData(allData)
-	case 0:
-		fmt.Println("👋 終了します")
-		os.Exit(0)
-	default:
-		fmt.Println("❌ 無効な選択です\n")
-		return nil, ""
-	}
-
+	// キャラ固定生成をデフォに
+	prompts, pickupCharcter = CharacterFixedMode(gen)
+	/*
+		switch choice {
+		case 1:
+			CompletelyRandomMode(gen)
+		case 2:
+			prompts, pickupCharcter = CharacterFixedMode(gen)
+		// case 3:
+		// 	AdvancedFixedMode(gen, allData)
+		// case 4:
+		// 	ShowAllData(allData)
+		case 0:
+			fmt.Println("👋 終了します")
+			os.Exit(0)
+		default:
+			fmt.Println("❌ 無効な選択です\n")
+			return nil, ""
+		}
+	*/
 	return prompts, pickupCharcter
 }
 
