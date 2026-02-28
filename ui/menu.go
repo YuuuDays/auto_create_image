@@ -16,15 +16,15 @@ import (
 */
 
 // Run はUIのメインループを実行
-func Run(allData map[string][]common.PromptItem, order []string) {
+func Run(allData map[string][]common.PromptItem, order []string) []string {
 	gen := generator.New(allData, order)
 
-	showMainMenu(gen, allData)
+	return showMainMenu(gen, allData)
 
 }
 
 // showMainMenu はメインメニューを表示
-func showMainMenu(gen *generator.Generator, allData map[string][]common.PromptItem) {
+func showMainMenu(gen *generator.Generator, allData map[string][]common.PromptItem) []string {
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	fmt.Println("🎨 プロンプト生成モード選択")
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -38,11 +38,13 @@ func showMainMenu(gen *generator.Generator, allData map[string][]common.PromptIt
 
 	choice := ReadInt()
 
+	var prompts []string // 生成されたプロンプトを保持
+
 	switch choice {
 	case 1:
 		CompletelyRandomMode(gen)
 	case 2:
-		CharacterFixedMode(gen)
+		prompts = CharacterFixedMode(gen)
 	// case 3:
 	// 	AdvancedFixedMode(gen, allData)
 	// case 4:
@@ -52,7 +54,10 @@ func showMainMenu(gen *generator.Generator, allData map[string][]common.PromptIt
 		os.Exit(0)
 	default:
 		fmt.Println("❌ 無効な選択です\n")
+		return nil
 	}
+
+	return prompts
 }
 
 // // ShowAllData はデータ一覧を表示

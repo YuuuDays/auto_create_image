@@ -56,7 +56,12 @@ func main() {
 	fmt.Println()
 
 	// UI開始
-	ui.Run(allData, cfg.PromptOrder)
+	responsePrompt := ui.Run(allData, cfg.PromptOrder)
+
+	// 結果を表示
+	for i, prompt := range responsePrompt {
+		fmt.Println(i, prompt)
+	}
 
 }
 

@@ -22,7 +22,7 @@ func CompletelyRandomMode(gen *generator.Generator) {
 }
 
 // CharacterFixedMode はキャラクター固定生成モード
-func CharacterFixedMode(gen *generator.Generator) {
+func CharacterFixedMode(gen *generator.Generator) []string {
 	fmt.Println("\n👤 キャラクター固定生成モード")
 
 	// キャラクターカテゴリを探す
@@ -30,7 +30,7 @@ func CharacterFixedMode(gen *generator.Generator) {
 
 	if len(characterItems) == 0 {
 		fmt.Println("❌ キャラクターデータが見つかりません")
-		return
+		return nil
 	}
 
 	// キャラクター一覧を日本語で表示
@@ -74,11 +74,17 @@ func CharacterFixedMode(gen *generator.Generator) {
 	// 生成
 	fmt.Println("\n生成結果:")
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+	// 返す用のstring変数
+	var promptArray []string
+
 	for i := 0; i < count; i++ {
 		prompt := gen.GenerateWithFixed(fixedElements)
 		fmt.Printf("%d. %s\n", i+1, prompt)
+		promptArray = append(promptArray, prompt)
 	}
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+
+	return promptArray
 }
 
 // // AdvancedFixedMode は詳細設定生成モード
