@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/yourname/sd-auto/internal/prompt"
+)
 
 func main() {
-	fmt.Println("hello,world!")
+	data, err := prompt.Load("src/action(行為).txt")
+
+	if err != nil {
+		fmt.Println("Error!", err)
+		return
+	}
+
+	fmt.Println(data)
 }
