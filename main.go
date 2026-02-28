@@ -7,6 +7,7 @@ import (
 	"github.com/yourname/sd-auto/common"
 	"github.com/yourname/sd-auto/config"
 	"github.com/yourname/sd-auto/prompt"
+	stablediffusion "github.com/yourname/sd-auto/stableDiffusion"
 	"github.com/yourname/sd-auto/ui"
 )
 
@@ -56,12 +57,15 @@ func main() {
 	fmt.Println()
 
 	// UI開始
-	responsePrompt := ui.Run(allData, cfg.PromptOrder)
+	responsePrompt, pickUpCharacterJP := ui.Run(allData, cfg.PromptOrder)
 
 	// 結果を表示
 	for i, prompt := range responsePrompt {
 		fmt.Println(i, prompt)
+		stablediffusion.GenerateImage(prompt, pickUpCharacterJP)
 	}
+
+	print(err)
 
 }
 

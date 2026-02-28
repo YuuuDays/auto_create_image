@@ -12,17 +12,17 @@ func CompletelyRandomMode(gen *generator.Generator) {
 	fmt.Print("何個生成しますか？ >> ")
 	count := ReadInt()
 
-	fmt.Println("\n生成結果:")
-	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+	// fmt.Println("\n生成結果:")
+	// fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	for i := 0; i < count; i++ {
 		prompt := gen.GenerateRandom()
 		fmt.Printf("%d. %s\n", i+1, prompt)
 	}
-	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+	// fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 }
 
 // CharacterFixedMode はキャラクター固定生成モード
-func CharacterFixedMode(gen *generator.Generator) []string {
+func CharacterFixedMode(gen *generator.Generator) ([]string, string) {
 	fmt.Println("\n👤 キャラクター固定生成モード")
 
 	// キャラクターカテゴリを探す
@@ -30,7 +30,7 @@ func CharacterFixedMode(gen *generator.Generator) []string {
 
 	if len(characterItems) == 0 {
 		fmt.Println("❌ キャラクターデータが見つかりません")
-		return nil
+		return nil, ""
 	}
 
 	// キャラクター一覧を日本語で表示
@@ -50,9 +50,10 @@ func CharacterFixedMode(gen *generator.Generator) []string {
 	charIdx := ReadInt()
 
 	var fixedCharacter string
+	var displayName string
 	if charIdx >= 0 && charIdx < len(characterItems) {
 		fixedCharacter = characterItems[charIdx].En
-		displayName := characterItems[charIdx].Ja
+		displayName = characterItems[charIdx].Ja
 		if displayName == "" {
 			displayName = fixedCharacter
 		}
@@ -84,7 +85,7 @@ func CharacterFixedMode(gen *generator.Generator) []string {
 	}
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
-	return promptArray
+	return promptArray, displayName
 }
 
 // // AdvancedFixedMode は詳細設定生成モード
