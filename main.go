@@ -51,7 +51,7 @@ func main() {
 		cancel()
 
 		// SD側も強制停止（任意）
-		http.Post("http://127.0.0.1:7861/sdapi/v1/interrupt", "application/json", nil)
+		http.Post("http://127.0.0.1:7860/sdapi/v1/interrupt", "application/json", nil)
 	}()
 
 	// 設定ファイル読み込み
