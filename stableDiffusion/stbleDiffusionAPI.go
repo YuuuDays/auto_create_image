@@ -49,7 +49,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 	req, err := http.NewRequestWithContext(
 		ctx,
 		"POST",
-		"http://127.0.0.1:7861/sdapi/v1/txt2img",
+		"http://127.0.0.1:7860/sdapi/v1/txt2img",
 		bytes.NewBuffer(jsonData),
 	)
 	req.Header.Set("Content-Type", "application/json")
