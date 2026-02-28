@@ -1,0 +1,10 @@
+{
+  "prompt_order": [
+    "base.txt",
+    "character.txt",
+    "action(行為).txt",
+    "angle(アングル).txt",
+    "Quality.txt",
+    "backgroud(背景).txt"
+  ]
+}

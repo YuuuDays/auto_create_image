@@ -2,9 +2,7 @@ package ui
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/yourname/sd-auto/common"
 	"github.com/yourname/sd-auto/generator"
 )
 
@@ -53,7 +51,7 @@ func CharacterFixedMode(gen *generator.Generator) {
 
 	var fixedCharacter string
 	if charIdx >= 0 && charIdx < len(characterItems) {
-		fixedCharacter = characterItems[charIdx].Ja
+		fixedCharacter = characterItems[charIdx].En
 		displayName := characterItems[charIdx].Ja
 		if displayName == "" {
 			displayName = fixedCharacter
@@ -83,58 +81,58 @@ func CharacterFixedMode(gen *generator.Generator) {
 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 }
 
-// AdvancedFixedMode は詳細設定生成モード
-func AdvancedFixedMode(gen *generator.Generator, allData map[string][]common.PromptItem) {
-	fmt.Println("\n🔧 詳細設定生成モード")
+// // AdvancedFixedMode は詳細設定生成モード
+// func AdvancedFixedMode(gen *generator.Generator, allData map[string][]common.PromptItem) {
+// 	fmt.Println("\n🔧 詳細設定生成モード")
 
-	// 固定する要素を選択
-	fixedElements := make(map[string]string)
+// 	// 固定する要素を選択
+// 	fixedElements := make(map[string]string)
 
-	fmt.Println("\n固定したい要素を選んでください")
-	fmt.Println("（何も固定しない場合は -1 を入力）")
+// 	fmt.Println("\n固定したい要素を選んでください")
+// 	fmt.Println("（何も固定しない場合は -1 を入力）")
 
-	// カテゴリごとに固定するか聞く
-	for category, items := range allData {
-		fmt.Printf("\n📌 %s を固定しますか？ (y/n/skip) >> ", category)
-		answer := ReadString()
+// 	// カテゴリごとに固定するか聞く
+// 	for category, items := range allData {
+// 		fmt.Printf("\n📌 %s を固定しますか？ (y/n/skip) >> ", category)
+// 		answer := ReadString()
 
-		if strings.ToLower(answer) == "y" || strings.ToLower(answer) == "yes" {
-			// このカテゴリの項目を日本語で表示
-			fmt.Printf("\n【%s】選択肢:\n", category)
-			fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
-			for i, item := range items {
-				displayName := item.Ja
-				if displayName == "" {
-					displayName = item.En
-				}
-				fmt.Printf("  %2d. %s\n", i, displayName)
-			}
-			fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+// 		if strings.ToLower(answer) == "y" || strings.ToLower(answer) == "yes" {
+// 			// このカテゴリの項目を日本語で表示
+// 			fmt.Printf("\n【%s】選択肢:\n", category)
+// 			fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+// 			for i, item := range items {
+// 				displayName := item.Ja
+// 				if displayName == "" {
+// 					displayName = item.En
+// 				}
+// 				fmt.Printf("  %2d. %s\n", i, displayName)
+// 			}
+// 			fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-			fmt.Print("番号を選択 (-1でスキップ) >> ")
-			idx := ReadInt()
+// 			fmt.Print("番号を選択 (-1でスキップ) >> ")
+// 			idx := ReadInt()
 
-			if idx >= 0 && idx < len(items) {
-				fixedElements[category] = items[idx].En
-				displayName := items[idx].Ja
-				if displayName == "" {
-					displayName = items[idx].En
-				}
-				fmt.Printf("✅ 「%s」に固定しました\n", displayName)
-			}
-		}
-	}
+// 			if idx >= 0 && idx < len(items) {
+// 				fixedElements[category] = items[idx].En
+// 				displayName := items[idx].Ja
+// 				if displayName == "" {
+// 					displayName = items[idx].En
+// 				}
+// 				fmt.Printf("✅ 「%s」に固定しました\n", displayName)
+// 			}
+// 		}
+// 	}
 
-	// 生成数を聞く
-	fmt.Print("\n何個生成しますか？ >> ")
-	count := ReadInt()
+// 	// 生成数を聞く
+// 	fmt.Print("\n何個生成しますか？ >> ")
+// 	count := ReadInt()
 
-	// 生成
-	fmt.Println("\n生成結果:")
-	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
-	for i := 0; i < count; i++ {
-		prompt := gen.GenerateWithFixed(fixedElements)
-		fmt.Printf("%d. %s\n", i+1, prompt)
-	}
-	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
-}
+// 	// 生成
+// 	fmt.Println("\n生成結果:")
+// 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+// 	for i := 0; i < count; i++ {
+// 		prompt := gen.GenerateWithFixed(fixedElements)
+// 		fmt.Printf("%d. %s\n", i+1, prompt)
+// 	}
+// 	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+// }

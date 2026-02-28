@@ -9,12 +9,16 @@ import (
 
 // Generator はプロンプト生成を担当
 type Generator struct {
-	AllData map[string][]common.PromptItem
+	AllData     map[string][]common.PromptItem
+	PromptOrder []string // ← 順序を保持
 }
 
 // New は新しいGeneratorを作成
-func New(data map[string][]common.PromptItem) *Generator {
-	return &Generator{AllData: data}
+func New(data map[string][]common.PromptItem, order []string) *Generator {
+	return &Generator{
+		AllData:     data,
+		PromptOrder: order,
+	}
 }
 
 // GenerateRandom は完全ランダムなプロンプトを生成
@@ -36,8 +40,10 @@ func (g *Generator) GenerateRandom() string {
 func (g *Generator) GenerateWithFixed(fixed map[string]string) string {
 	var parts []string
 
-	for category, items := range g.AllData {
-		if len(items) == 0 {
+	// 順序に従って処理
+	for _, category := range g.PromptOrder {
+		items, ok := g.AllData[category]
+		if !ok || len(items) == 0 {
 			continue
 		}
 
