@@ -3,15 +3,12 @@ package prompt
 import (
 	"encoding/json"
 	"os"
+
+	"github.com/yourname/sd-auto/common"
 )
 
-type PromptItem struct {
-	En string `json:"en"`
-	Ja string `json:"ja"`
-}
-
-func Load(filename string) ([]PromptItem, error) {
-	var items []PromptItem
+func Load(filename string) ([]common.PromptItem, error) {
+	var items []common.PromptItem
 
 	file, err := os.ReadFile(filename)
 
@@ -19,11 +16,14 @@ func Load(filename string) ([]PromptItem, error) {
 		return nil, err
 	}
 
+	// この時点ではfileはバイナリなのでGoの構造体へ置換
 	err = json.Unmarshal(file, &items)
 	if err != nil {
 		return nil, err
 	}
 
+	// fmt.Println(items)
+	// fmt.Println(reflect.TypeOf(items))
 	return items, nil
 
 }
