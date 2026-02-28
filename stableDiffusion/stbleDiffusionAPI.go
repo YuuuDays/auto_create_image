@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type SDResponse struct {
@@ -52,6 +53,9 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 		bytes.NewBuffer(jsonData),
 	)
 	req.Header.Set("Content-Type", "application/json")
+
+	// API呼び出しの開始時刻を記録
+	startTime := time.Now()
 
 	// ====== リクエスト送信 ======
 	resp, err := http.DefaultClient.Do(req)
@@ -100,8 +104,14 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 		fmt.Println("保存できませんでした....")
 		return
 	}
+	// 経過時間を計算
+	elapsed := time.Since(startTime)
 
-	fmt.Println("保存完了", fullPath)
+	// 方法1: 分と秒に分解して表示
+	minutes := int(elapsed.Minutes())
+	seconds := int(elapsed.Seconds()) % 60
+
+	fmt.Printf("保存完了 (生成時間: %d分%d秒)\n", minutes, seconds)
 
 }
 

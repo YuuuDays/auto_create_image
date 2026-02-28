@@ -79,7 +79,8 @@ func main() {
 	responsePrompt, pickUpCharacterJP := ui.Run(allData, cfg.PromptOrder)
 
 	// 生成ループ
-	for _, prompt := range responsePrompt {
+	for i, prompt := range responsePrompt {
+		fmt.Printf("%d回目\n", i+1)
 		select {
 		case <-ctx.Done():
 			fmt.Println("生成ループ停止!!!!!!!!!!!!!!!")
