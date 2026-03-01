@@ -37,7 +37,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 	payload := map[string]interface{}{
 		"prompt":          prompt,
 		"negative_prompt": "bad quality,worst quality,worst detail,sketch,censored, artist name, signature, watermark,patreon username, patreon logo",
-		"width":           816,
+		"width":           768,
 		"height":          1024,
 		"cfg_scale":       7,
 		"steps":           20,
@@ -113,6 +113,22 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 	seconds := int(elapsed.Seconds()) % 60
 
 	fmt.Printf("保存完了 (生成時間: %d分%d秒)\n", minutes, seconds)
+
+	// ↓↓↓ ここから追加 ↓↓↓
+
+	// ====== VRAMクリア ======
+	clearReq, _ := http.NewRequest("POST", "http://127.0.0.1:7860/sdapi/v1/memory/free", nil)
+	clearReq.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	_, err = client.Do(clearReq)
+	if err != nil {
+		// エラーでも続行（致命的じゃない）
+		fmt.Println("⚠️ VRAMクリア失敗（無視して続行）:", err)
+	}
+
+	// GPUのクリーンアップ完了を待つ
+	time.Sleep(2 * time.Second)
 
 }
 
