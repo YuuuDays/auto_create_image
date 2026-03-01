@@ -41,6 +41,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 		"height":          1024,
 		"cfg_scale":       7,
 		"steps":           20,
+		"sampler_name":    "DPM++ 2M Karras",
 		"seed":            -1, // -1でランダム
 	}
 
@@ -112,7 +113,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 	minutes := int(elapsed.Minutes())
 	seconds := int(elapsed.Seconds()) % 60
 
-	fmt.Printf("保存完了 (生成時間: %d分%d秒)\n", minutes, seconds)
+	fmt.Printf("保存完了 (生成時間: %d分%d秒),ファイル名:%s\n", minutes, seconds, fileName)
 
 	// ↓↓↓ ここから追加 ↓↓↓
 
