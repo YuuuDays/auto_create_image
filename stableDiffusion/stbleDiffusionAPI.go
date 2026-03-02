@@ -13,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type SDResponse struct {
@@ -32,11 +34,17 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 		return
 	}
 
+	// ====== 仮想環境取得 ======
+	if err := godotenv.Load(); err != nil {
+		os.Exit(1)
+	}
+	var negativePrompt = os.Getenv("NEGATIVE_PROMPT")
+
 	// nagative_prompt ベタ打ちの為要変更検討
 	// sizeは64の倍数
 	payload := map[string]interface{}{
 		"prompt":          prompt,
-		"negative_prompt": "bad quality,worst quality,worst detail,sketch,censored, artist name, signature, watermark,patreon username, patreon logo",
+		"negative_prompt": negativePrompt,
 		"width":           768,
 		"height":          1024,
 		"cfg_scale":       7,
@@ -115,7 +123,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 
 	fmt.Printf("保存完了 (生成時間: %d分%d秒),ファイル名:%s\n", minutes, seconds, fileName)
 
-	// ↓↓↓ ここから追加 ↓↓↓
+	// ↓↓↓ メモリオーバーフローする場合は以下を起動
 
 	// ====== VRAMクリア ======
 	clearReq, _ := http.NewRequest("POST", "http://127.0.0.1:7860/sdapi/v1/memory/free", nil)
@@ -129,7 +137,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 	}
 
 	// GPUのクリーンアップ完了を待つ
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Second)
 
 }
 
