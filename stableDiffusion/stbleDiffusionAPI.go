@@ -40,6 +40,7 @@ func GenerateImage(ctx context.Context, prompt string, pickUpCharcterJP string) 
 	}
 	var negativePrompt = os.Getenv("NEGATIVE_PROMPT")
 
+	// ここをターミナル上から変えたいな
 	// nagative_prompt ベタ打ちの為要変更検討
 	// sizeは64の倍数
 	payload := map[string]interface{}{
