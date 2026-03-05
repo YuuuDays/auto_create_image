@@ -42,41 +42,5 @@ func showMainMenu(gen *generator.Generator, allData map[string][]common.PromptIt
 
 	// キャラ固定生成をデフォに
 	prompts, pickupCharcter = CharacterFixedMode(gen)
-	/*
-		switch choice {
-		case 1:
-			CompletelyRandomMode(gen)
-		case 2:
-			prompts, pickupCharcter = CharacterFixedMode(gen)
-		// case 3:
-		// 	AdvancedFixedMode(gen, allData)
-		// case 4:
-		// 	ShowAllData(allData)
-		case 0:
-			fmt.Println("👋 終了します")
-			os.Exit(0)
-		default:
-			fmt.Println("❌ 無効な選択です\n")
-			return nil, ""
-		}
-	*/
 	return prompts, pickupCharcter
 }
-
-// // ShowAllData はデータ一覧を表示
-// func ShowAllData(allData map[string][]common.PromptItem) {
-// 	fmt.Println("\n📋 データ一覧")
-
-// 	for category, items := range allData {
-// 		fmt.Printf("\n【%s】(%d件)\n", category, len(items))
-// 		fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
-// 		for i, item := range items {
-// 			displayName := item.Ja
-// 			if displayName == "" {
-// 				displayName = item.En
-// 			}
-// 			fmt.Printf("  %2d. %s (%s)\n", i, displayName, item.Ja)
-// 		}
-// 		fmt.Println()
-// 	}
-// }
